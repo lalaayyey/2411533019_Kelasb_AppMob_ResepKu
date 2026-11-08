@@ -2,27 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:resepku/pages/home_page.dart';
 import 'package:resepku/providers/favorite_provider.dart';
+import 'package:resepku/providers/theme_provider.dart';
 import 'package:resepku/widgets/identity_footer.dart';
+
 void main() {
-runApp(
-MultiProvider(
-providers: [
-ChangeNotifierProvider(create: (context) => FavoriteProvider()),
-],
-child: const ResepKuApp(),
-),
-);
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => FavoriteProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()), // Ditambahkan di sini
+      ],
+      child: const ResepKuApp(),
+    ),
+  );
 }
+
 class ResepKuApp extends StatelessWidget {
-const ResepKuApp({super.key});
-@override
-Widget build(BuildContext context) {
-return MaterialApp(
-title: 'ResepKu',
-debugShowCheckedModeBanner: false,
-theme: ThemeData(colorSchemeSeed: Colors.deepOrange),
-builder: (context, child) => IdentityFooter(child: child!), // tetap dipertahankan
-home: const HomePage(),
-);
-}
+  const ResepKuApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Menggunakan context.watch agar MaterialApp ikut rebuild saat tema berubah
+    final themeProvider = context.watch<ThemeProvider>();
+
+    return MaterialApp(
+      title: 'ResepKu',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(colorSchemeSeed: Colors.deepOrange),
+      darkTheme: ThemeData(
+        colorSchemeSeed: Colors.deepOrange,
+        brightness: Brightness.dark,
+      ),
+      themeMode: themeProvider.themeMode, // Dibaca dari ThemeProvider
+      builder: (context, child) => IdentityFooter(child: child!), // Footer NIM & nama tetap ada
+      home: const HomePage(),
+    );
+  }
 }
