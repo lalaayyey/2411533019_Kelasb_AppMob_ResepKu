@@ -7,6 +7,7 @@ import 'package:resepku/widgets/recipe_image.dart';
 class DetailPage extends StatefulWidget {
   const DetailPage({super.key, required this.recipe});
 
+
   final Recipe recipe;
 
   @override
@@ -98,6 +99,16 @@ class _DetailPageState extends State<DetailPage> {
               leading: const Icon(Icons.check_circle_outline),
               title: Text(item),
             ),
+          if (recipe.instructions.isNotEmpty) ...[
+            const SizedBox(height: 24),
+            Text('Langkah', style: textTheme.titleLarge),
+            for (final (index, step) in recipe.instructions.indexed)
+              ListTile(
+                dense: true,
+                leading: CircleAvatar(radius: 12, child: Text('${index + 1}')),
+                title: Text(step),
+              ),
+          ],
         ],
       ),
     );

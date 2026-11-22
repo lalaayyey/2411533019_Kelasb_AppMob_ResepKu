@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:resepku/pages/home_page.dart';
 import 'package:resepku/providers/favorite_provider.dart';
 import 'package:resepku/providers/theme_provider.dart';
+import 'package:resepku/services/recipe_service.dart';
 import 'package:resepku/widgets/identity_footer.dart';
 
 void main() {
@@ -10,7 +11,12 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
-        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()), // Latihan 1 Modul 6
+        // Provider biasa: RecipeService tidak berubah, jadi tidak perlu notifyListeners
+        Provider(
+          create: (context) => RecipeService(),
+          dispose: (context, service) => service.close(),
+        ),
       ],
       child: const ResepKuApp(),
     ),
@@ -22,22 +28,20 @@ class ResepKuApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
-
     return MaterialApp(
       title: 'ResepKu',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorSchemeSeed: Colors.deepOrange,
-        fontFamily: 'Poppins',
+        fontFamily: 'Poppins', // didaftarkan di pubspec.yaml
       ),
       darkTheme: ThemeData(
         colorSchemeSeed: Colors.deepOrange,
         brightness: Brightness.dark,
         fontFamily: 'Poppins',
       ),
-      themeMode: themeProvider.themeMode,
-      builder: (context, child) => IdentityFooter(child: child!),
+      themeMode: context.watch<ThemeProvider>().mode, // Latihan 1 Modul 6
+      builder: (context, child) => IdentityFooter(child: child!), // footer NIM & nama (Modul 6)
       home: const HomePage(),
     );
   }
