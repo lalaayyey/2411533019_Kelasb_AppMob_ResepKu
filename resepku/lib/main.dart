@@ -10,7 +10,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => FavoriteProvider()),
-        ChangeNotifierProvider(create: (context) => ThemeProvider()), // Ditambahkan di sini
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
       child: const ResepKuApp(),
     ),
@@ -22,19 +22,22 @@ class ResepKuApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Menggunakan context.watch agar MaterialApp ikut rebuild saat tema berubah
     final themeProvider = context.watch<ThemeProvider>();
 
     return MaterialApp(
       title: 'ResepKu',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorSchemeSeed: Colors.deepOrange),
+      theme: ThemeData(
+        colorSchemeSeed: Colors.deepOrange,
+        fontFamily: 'Poppins',
+      ),
       darkTheme: ThemeData(
         colorSchemeSeed: Colors.deepOrange,
         brightness: Brightness.dark,
+        fontFamily: 'Poppins',
       ),
-      themeMode: themeProvider.themeMode, // Dibaca dari ThemeProvider
-      builder: (context, child) => IdentityFooter(child: child!), // Footer NIM & nama tetap ada
+      themeMode: themeProvider.themeMode,
+      builder: (context, child) => IdentityFooter(child: child!),
       home: const HomePage(),
     );
   }
